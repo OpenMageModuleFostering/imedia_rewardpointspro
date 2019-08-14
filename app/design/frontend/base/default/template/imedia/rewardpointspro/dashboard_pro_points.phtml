@@ -1,0 +1,10 @@
+<?php
+$customerId = Mage::getModel('customer/session')->getCustomerId();
+$customerPoints = Mage::getModel('rewardpointspro/account')->load($customerId);
+?>
+Your Points: <?php echo sprintf('%d',$customerPoints->getPointsCurrent()); ?>
+<br/>
+Total Points Accumulated: <?php echo sprintf('%d',$customerPoints->getPointsReceived()); ?>
+<br/>
+Total Points Spent: <?php echo sprintf('%d',$customerPoints->getPointsSpent()); ?>
+<br/>

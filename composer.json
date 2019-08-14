@@ -1,0 +1,16 @@
+{
+    "name": "OpenMageModuleFostering/Imedia_RewardPointsPro",
+    "type": "magento-module",
+    "license": "OSLv3.0",
+    "homepage": "",
+    "description": "Customer reward points pro",
+    "authors": [
+    {
+        "name": "iMedia inc.",
+        "email": "info@imediadesigns.org"
+    }
+],
+    "suggest": {
+        "magento-hackathon/magento-composer-installer": "*"
+    }
+}

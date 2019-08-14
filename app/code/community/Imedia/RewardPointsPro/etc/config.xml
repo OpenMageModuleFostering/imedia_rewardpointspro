@@ -1,0 +1,220 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Configuration file
+ */
+-->
+<config>
+    <modules>
+        <Imedia_RewardPointsPro>
+            <version>0.0.1</version>
+	    </Imedia_RewardPointsPro>
+    </modules>
+	<frontend>
+        <routers>
+            <imedia_rewardpointspro>
+                <use>standard</use>
+                <args>
+                    <module>Imedia_RewardPointsPro</module>
+                    <frontName>rewardpointspro</frontName>
+                </args>
+            </imedia_rewardpointspro>
+			<checkout>
+				<args>
+					<modules>
+						<imedia_rewardpointspro before="Mage_Checkout_CartController">Imedia_RewardPointsPro</imedia_rewardpointspro>
+					</modules>
+				</args>
+			</checkout>
+			
+        </routers>
+        <!-- set frontend layout file-->
+        <layout>
+            <updates>
+                <imedia_rewardpointspro>
+                    <file>imedia/imedia_rewardpointspro.xml</file>
+                </imedia_rewardpointspro>
+            </updates>
+        </layout>
+	</frontend>
+    <global> 
+	    <events>
+			<sales_order_place_after>
+				<observers>
+					<imedia_rewardpointspro_model_observer>
+						<type>singleton</type>
+						<class>imedia_rewardpointspro/observer</class>
+						<method>recordPointsForOrderEvent</method>
+					</imedia_rewardpointspro_model_observer>
+				</observers>
+			</sales_order_place_after>
+			<customer_register_success>
+				<observers>
+				  <imedia_rewardpointspro_model_observer>
+						<type>singleton</type>
+						<class>imedia_rewardpointspro/observer</class>
+						<method>rewardpoints</method>
+				  </imedia_rewardpointspro_model_observer>
+				</observers>
+			</customer_register_success>
+			<newsletter_subscriber_save_before>
+				<observers>
+					<imedia_rewardpointspro_model_observer>
+						<type>singleton</type>
+						<class>imedia_rewardpointspro/observer</class>
+						<method>subscribedToNewsletter</method> 
+					</imedia_rewardpointspro_model_observer>
+				</observers>
+			</newsletter_subscriber_save_before>
+			<sales_order_save_commit_after>
+				<observers>
+				   <imedia_rewardpointspro_model_observer>
+						<type>singleton</type>
+						<class>imedia_rewardpointspro/observer</class>
+						<method>orderStatusChange</method>
+				   </imedia_rewardpointspro_model_observer>
+				</observers>
+			</sales_order_save_commit_after>   
+        </events>
+		<fieldsets>
+            <sales_convert_quote_address>
+                <fee_amount><to_order>*</to_order></fee_amount>
+                <base_fee_amount><to_order>*</to_order></base_fee_amount>
+            </sales_convert_quote_address>
+			<sales_convert_order>
+				<fee_amount><to_invoice>*</to_invoice></fee_amount>
+				<base_fee_amount><to_invoice>*</to_invoice></base_fee_amount>
+            </sales_convert_order>
+        </fieldsets>
+		<pdf>
+            <totals>
+                <rewardspro translate="title">
+                    <title>Rewards points discount</title>
+                    <source_field>fee_amount</source_field>
+                    <font_size>7</font_size>
+                    <display_zero>0</display_zero>
+                    <sort_order>650</sort_order>
+                    <amount_prefix>-</amount_prefix>
+                </rewardspro>
+            </totals>
+        </pdf>
+		
+		
+		<sales>
+            <quote>
+                <totals>
+                    <discount>
+                        <class>Imedia_RewardPointsPro_Model_Discount</class>
+                        <after>subtotal</after>
+                    </discount>
+                </totals>
+            </quote>
+             
+            <order_invoice>
+                <totals>
+                    <discount>
+                        <class>Imedia_RewardPointsPro_Model_Invoice</class>
+                        <after>subtotal</after>
+                    </discount>
+                </totals>
+            </order_invoice>
+             
+            <order_creditmemo>
+                <totals>
+                    <discount>
+                        <class>Imedia_RewardPointsPro_Model_Creditmemo</class>
+                        <after>subtotal</after>
+                    </discount>
+                </totals>
+            </order_creditmemo>
+        </sales>
+
+        
+        <models>
+		
+			<rewardpointspro>
+                <class>Imedia_RewardPointsPro_Model</class>
+				<resourceModel>imedia_rewardpointspro_mysql4</resourceModel>
+            </rewardpointspro>
+			<imedia_rewardpointspro>
+                <class>Imedia_RewardPointsPro_Model</class>
+                <resourceModel>imedia_rewardpointspro_mysql4</resourceModel>
+            </imedia_rewardpointspro>
+			
+            <imedia_rewardpointspro_mysql4>
+                <class>Imedia_RewardPointsPro_Model_Mysql4</class>
+                <entities>
+                    <rewardpointspro>
+                        <table>rewardpointspro_rewardpoints</table>
+						<table>rewardpointspro_account</table>
+                    </rewardpointspro>
+                </entities>
+            </imedia_rewardpointspro_mysql4>
+
+			<rewardpointspro_mysql4>
+                <class>Imedia_RewardPointsPro_Model_Mysql4</class>
+                <entities>
+                    <rewardpointspro>
+                        <table>rewardpointspro_account</table>
+                    </rewardpointspro>
+                </entities>
+            </rewardpointspro_mysql4>
+			
+        </models>
+        
+        <helpers>
+            <imedia_rewardpointspro>
+                <class>Imedia_RewardPointsPro_Helper</class>
+            </imedia_rewardpointspro>  
+        </helpers>
+        
+        <blocks>
+            <imedia_rewardpointspro>
+                <class>Imedia_RewardPointsPro_Block</class>
+            </imedia_rewardpointspro>
+			
+			<adminhtml>
+				<rewrite>
+					<sales_order_totals>Imedia_RewardPointsPro_Block_Adminhtml_Sales_Order</sales_order_totals> 
+					<sales_order_invoice_totals>Imedia_RewardPointsPro_Block_Adminhtml_Sales_Invoice</sales_order_invoice_totals> 
+				</rewrite>
+			</adminhtml>
+
+        </blocks>
+        <!-- Setup Resource -->
+        <resources>
+            <imedia_rewardpointspro_setup>
+                <setup>
+                    <module>Imedia_RewardPointsPro</module>
+                    <class>Imedia_RewardPointsPro_Model_Resource_Setup</class>
+                </setup>
+            </imedia_rewardpointspro_setup>
+        </resources>
+		
+	
+    </global>
+
+    <!-- Adminhtml layout xml configuration -->
+    <adminhtml>
+        <layout>
+            <updates>
+                <imedia_rewardpointspro>
+                    <file>imedia/imedia_rewardpointspro.xml</file>
+                </imedia_rewardpointspro>
+            </updates>
+        </layout>
+    </adminhtml>
+    
+    <!-- Admin router configuration-->
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Imedia_RewardPointsPro after="Mage_Adminhtml">Imedia_RewardPointsPro_Adminhtml</Imedia_RewardPointsPro>
+                    </modules>
+                </args>
+            </adminhtml> 
+        </routers>
+    </admin>    
+</config>
